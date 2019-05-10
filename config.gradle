@@ -1,0 +1,25 @@
+ext {
+    //表示是作为module还是application
+    isModule = false
+    //applicationId版本好sdkVersion统一管理
+    android = [
+            compileSdkVersion           : 28,
+            buildToolsVersion           : 28,
+            applicationId               : "com.adrian.simplemvpframe",
+            minSdkVersion               : 19,
+            targetSdkVersion            : 28,
+            versionCode                 : 1,
+            versionName                 : "1.0",
+            testInstrumentationRunner   : "androidx.test.runner.AndroidJUnitRunner"
+    ]
+
+    def X_CORE_VERSION = "1.0.1"
+    def X_APPCOMPAT_VERSION = "1.0.2"
+    def X_CONSTRAINT_LAYOUT_VERSION = "1.1.3"
+
+    dependencies = [
+            androidXCore            : 'androidx.core:core-ktx:' + X_CORE_VERSION,
+            androidXAppcompat       : 'androidx.appcompat:appcompat:' + X_APPCOMPAT_VERSION,
+            androidXConstraintLayout: 'androidx.constraintlayout:constraintlayout:' + X_CONSTRAINT_LAYOUT_VERSION
+    ]
+}
