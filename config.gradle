@@ -13,9 +13,9 @@ ext {
             testInstrumentationRunner   : "androidx.test.runner.AndroidJUnitRunner"
     ]
 
-    def X_CORE_VERSION = "1.0.1"
+    def X_CORE_VERSION = "1.0.2"
     def X_APPCOMPAT_VERSION = "1.0.2"
-    def X_CONSTRAINT_LAYOUT_VERSION = "2.0.0-alpha4"
+    def X_CONSTRAINT_LAYOUT_VERSION = "1.1.3"
     def X_RECYCLERVIEW_VERSION = "1.0.0"
     def X_MATERIAL_VERSION = "1.0.0"
     def X_LEGACY_SUPPORT_V4_VERSION = "1.0.0"
@@ -46,8 +46,8 @@ ext {
             androidXConstraintLayout: 'androidx.constraintlayout:constraintlayout:' + X_CONSTRAINT_LAYOUT_VERSION,
             androidXRecyclerView    : 'androidx.recyclerview:recyclerview:' + X_RECYCLERVIEW_VERSION,
             androidXMaterial        : 'com.google.android.material:material:' + X_MATERIAL_VERSION,
-            androidXLegacyV4          : 'androidx.legacy:legacy-support-v4:' + X_LEGACY_SUPPORT_V4_VERSION,
-            ndroidXLegacyV13          : 'androidx.legacy:legacy-support-v4:' + X_LEGACY_SUPPORT_V13_VERSION,
+            androidXLegacyV4        : 'androidx.legacy:legacy-support-v4:' + X_LEGACY_SUPPORT_V4_VERSION,
+            androidXLegacyV13       : 'androidx.legacy:legacy-support-v4:' + X_LEGACY_SUPPORT_V13_VERSION,
             androidXVectorDrawable  : 'androidx.vectordrawable:vectordrawable-animated:' + X_VECTOR_DRAWABLE_VERSION,
             androidXAsyncLayoutInflater:'androidx.asynclayoutinflater:asynclayoutinflater:' + X_ASYNC_LAYOUT_INFLATER_VERSION,
             androidXCardView        : 'androidx.cardview:cardview:' + X_CARDVIEW_VERSION,

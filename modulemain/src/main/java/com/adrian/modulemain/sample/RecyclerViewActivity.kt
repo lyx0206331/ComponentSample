@@ -15,9 +15,9 @@ import kotlinx.android.synthetic.main.modulemain_item_textview.*
 
 class RecyclerViewActivity : AppCompatActivity() {
 
-    val list = arrayListOf("abc", "bcd", "asdfa", "东奔西走", "基本原则")
+    private val list = arrayListOf("abc", "bcd", "asdfa", "东奔西走", "基本原则")
 
-    val adapter by lazy { StringAdapter() }
+    private val adapter by lazy { StringAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +27,9 @@ class RecyclerViewActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
         recyclerView.itemAnimator = DefaultItemAnimator()
         adapter.setData(list)
-        adapter.onItemClickListener =
-            { v, position -> Toast.makeText(this, "点击${adapter.getItem(position)}", Toast.LENGTH_SHORT).show() }
+        adapter.onItemClickListener = { v, position ->
+            Toast.makeText(this, "点击${adapter.getItem(position)}", Toast.LENGTH_SHORT).show()
+        }
         adapter.onItemLongClickListener = { v, position ->
             Toast.makeText(this, "长按${adapter.getItem(position)}", Toast.LENGTH_SHORT).show()
             true
