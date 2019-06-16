@@ -4,7 +4,7 @@ ext {
     //applicationId版本好sdkVersion统一管理
     android = [
             compileSdkVersion           : 28,
-            buildToolsVersion           : 28,
+            buildToolsVersion           : "28.0.0",
             applicationId               : "com.adrian.simplemvpframe",
             minSdkVersion               : 19,
             targetSdkVersion            : 28,
