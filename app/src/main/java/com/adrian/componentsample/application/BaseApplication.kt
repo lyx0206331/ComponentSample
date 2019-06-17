@@ -1,4 +1,4 @@
-package com.adrian.componentsample
+package com.adrian.componentsample.application
 
 import android.app.Application
 

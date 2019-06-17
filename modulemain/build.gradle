@@ -20,6 +20,12 @@ android {
 
         testInstrumentationRunner rootProject.ext.android.testInstrumentationRunner
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+
     }
 
     buildTypes {
@@ -62,6 +68,9 @@ dependencies {
     testImplementation rootProject.ext.dependencies.androidJUnit
     androidTestImplementation rootProject.ext.dependencies.androidXTestRunner
     androidTestImplementation rootProject.ext.dependencies.androidXTextEspressoCore
+
+    implementation rootProject.ext.dependencies.alibabaArouterApi
+    annotationProcessor rootProject.ext.dependencies.alibabaArouterCompiler
 }
 //repositories {
 //    mavenCentral()

@@ -3,11 +3,11 @@ ext {
     isModule = false
     //applicationId版本好sdkVersion统一管理
     android = [
-            compileSdkVersion           : 28,
-            buildToolsVersion           : "28.0.3",
-            applicationId               : "com.adrian.simplemvpframe",
+            compileSdkVersion           : 29,
+            buildToolsVersion           : "29.0.0",
+            applicationId               : "com.adrian.componentsample",
             minSdkVersion               : 19,
-            targetSdkVersion            : 28,
+            targetSdkVersion            : 29,
             versionCode                 : 1,
             versionName                 : "1.0",
             testInstrumentationRunner   : "androidx.test.runner.AndroidJUnitRunner"
@@ -44,6 +44,9 @@ ext {
     def X_VIEW_PAGER_VERSION = "1.0.0"
     def X_WEBKIT_VERSION = "1.0.0"
 
+    def ALIBABA_AROUTER_API_VERSION = "1.5.0"
+    def ALIBABA_AROUTER_COMPILER_VERSION = "1.2.2"
+
     dependencies = [
             androidJUnit            : 'junit:junit:' + JUNIT_VERSION,
             androidXTestRunner      : 'androidx.test:runner:' + X_TEST_RUNNER_VERSION,
@@ -74,6 +77,9 @@ ext {
             androidXMedia           : 'androidx.media:media:' + X_MEDIA_VERSION,
             androidXSwiperefreshLayout:'androidx.swiperefreshlayout:swiperefreshlayout:' + X_SWIPEREFRESH_LAYOUT_VERSION,
             androidXViewPager       : 'androidx.viewpager:viewpager:' + X_VIEW_PAGER_VERSION,
-            androidXWebkit          : 'androidx.webkit:webkit:' + X_WEBKIT_VERSION
+            androidXWebkit          : 'androidx.webkit:webkit:' + X_WEBKIT_VERSION,
+
+            alibabaArouterApi       : 'com.alibaba:arouter-api:' + ALIBABA_AROUTER_API_VERSION,
+            alibabaArouterCompiler  : 'com.alibaba:arouter-compiler:' + ALIBABA_AROUTER_COMPILER_VERSION
     ]
 }
