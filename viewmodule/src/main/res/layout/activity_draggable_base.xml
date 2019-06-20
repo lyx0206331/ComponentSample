@@ -3,24 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".DraggableBaseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnDragGrid"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/draggable_grid" />
+            android:layout_height="400dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="这是一个占着茅坑不拉屎的控件" />
 
-        <Button
-            android:id="@+id/btnDragList"
+        <com.adrian.viewmodule.DraggableView
+            android:id="@+id/draggableView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/draggable_list" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

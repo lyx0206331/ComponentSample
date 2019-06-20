@@ -27,16 +27,21 @@ import kotlin.math.abs
 class DraggableView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     RecyclerView(context, attrs, defStyle) {
 
+    /** 是否禁止拖动 */
     var dragEnable = true
+    /** 是否显示拖拽动画 */
     var showDragAnimation = true
 
     var onItemChangeListener: IOnItemChangeListener? = null
 
+    /** 放大动画 */
     private var zoomAnim =
         ScaleAnimation(1.0f, 1.1f, 1.0f, 1.1f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
+    /** 恢复动画 */
     private var revertAnim =
         ScaleAnimation(1.1f, 1.0f, 1.1f, 1.0f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
 
+    /** item触摸回调 */
     private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
             if (!dragEnable) {
@@ -278,9 +283,13 @@ class DividerGridItemDecoration : RecyclerView.ItemDecoration {
  * 可拖拽适配器基类
  */
 abstract class DraggableBaseAdapter<T : RecyclerView.ViewHolder, M : DraggableBaseEntity>(
-    context: Context,
     val data: List<M>
 ) : RecyclerView.Adapter<T>(), IOnItemChangeListener {
+
+    fun getItem(position: Int): M {
+        return data[position]
+    }
+
     override fun getItemCount(): Int = data.size
 
     override fun onItemDraggable(position: Int): Boolean = data[position].dragEnable

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ViewModule</string>
+
+    <string name="draggable_grid">可拖动网格布局</string>
+    <string name="draggable_list">可拖动垂直线性布局</string>
 </resources>
