@@ -297,19 +297,11 @@ abstract class DraggableBaseAdapter<T : RecyclerView.ViewHolder, M : DraggableBa
     override fun onItemMoved(from: Int, target: Int) {
         if (from < target) {
             for (i in from until target) {
-                if (i < target) {
-                    Collections.swap(data, i, i + 1)
-                } else {
-                    break
-                }
+                Collections.swap(data, i, i + 1)
             }
         } else {
-            for (i in from downTo target - 1) {
-                if (i > target) {
-                    Collections.swap(data, i, i - 1)
-                } else {
-                    break
-                }
+            for (i in from downTo target + 1) {
+                Collections.swap(data, i, i - 1)
             }
         }
         notifyItemMoved(from, target)
