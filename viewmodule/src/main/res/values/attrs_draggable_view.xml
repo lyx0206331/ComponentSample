@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="DragRecyclerView">
+    <declare-styleable name="DraggableView">
         <attr name="drv_show_decoration" format="boolean" />
         <attr name="drv_drag_enable" format="boolean" />
         <attr name="drv_show_drag_anim" format="boolean" />

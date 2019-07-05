@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DragGridActivity"
+            android:name=".draggableview.DragGridActivity"
             android:label="@string/draggable_grid"></activity>
         <activity
-            android:name=".DragListActivity"
+            android:name=".draggableview.DragListActivity"
             android:label="@string/draggable_list"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>

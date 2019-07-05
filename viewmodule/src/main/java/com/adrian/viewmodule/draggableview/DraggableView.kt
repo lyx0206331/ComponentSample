@@ -1,4 +1,4 @@
-package com.adrian.viewmodule
+package com.adrian.viewmodule.draggableview
 
 import android.content.Context
 import android.graphics.Canvas
@@ -16,6 +16,7 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.adrian.viewmodule.R
 import java.util.*
 import kotlin.math.abs
 
@@ -116,9 +117,9 @@ class DraggableView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     init {
         attrs?.apply {
-            val ta = context.obtainStyledAttributes(this, R.styleable.DragRecyclerView, defStyle, 0)
-            dragEnable = ta.getBoolean(R.styleable.DragRecyclerView_drv_drag_enable, true)
-            showDragAnimation = ta.getBoolean(R.styleable.DragRecyclerView_drv_show_drag_anim, true)
+            val ta = context.obtainStyledAttributes(this, R.styleable.DraggableView, defStyle, 0)
+            dragEnable = ta.getBoolean(R.styleable.DraggableView_drv_drag_enable, true)
+            showDragAnimation = ta.getBoolean(R.styleable.DraggableView_drv_show_drag_anim, true)
             ta.recycle()
         }
     }

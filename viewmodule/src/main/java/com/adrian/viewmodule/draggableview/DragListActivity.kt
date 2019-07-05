@@ -1,4 +1,4 @@
-package com.adrian.viewmodule
+package com.adrian.viewmodule.draggableview
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.adrian.viewmodule.R
 
 /**
  * date:2019/6/20 16:29
@@ -22,13 +23,62 @@ class DragListActivity : DraggableBaseActivity<DraggableBaseActivity.DragEntity>
 
     override fun getData(): List<DragEntity> {
         val data = ArrayList<DragEntity>()
-        data.add(DragEntity("今日热点", R.mipmap.hot, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("国际新闻", R.mipmap.news_international, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("及时快讯", R.mipmap.news, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("美女图片", R.mipmap.beauty, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("正经要闻", R.mipmap.politics, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("体育赛事", R.mipmap.sports, dragEnable = true, dropEnable = true))
-        data.add(DragEntity("茶余饭后", R.mipmap.gossip, dragEnable = true, dropEnable = true))
+        data.add(
+            DragEntity(
+                "今日热点",
+                R.mipmap.hot,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "国际新闻",
+                R.mipmap.news_international,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "及时快讯",
+                R.mipmap.news,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "美女图片",
+                R.mipmap.beauty,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "正经要闻",
+                R.mipmap.politics,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "体育赛事",
+                R.mipmap.sports,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
+        data.add(
+            DragEntity(
+                "茶余饭后",
+                R.mipmap.gossip,
+                dragEnable = true,
+                dropEnable = true
+            )
+        )
         return data
     }
 

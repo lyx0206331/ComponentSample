@@ -1,9 +1,10 @@
-package com.adrian.viewmodule
+package com.adrian.viewmodule.draggableview
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.adrian.viewmodule.R
 import kotlinx.android.synthetic.main.activity_draggable_base.*
 
 /**
