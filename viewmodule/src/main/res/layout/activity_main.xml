@@ -21,6 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/draggable_list" />
+
+        <Button
+            android:id="@+id/btnSmartEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/smart_edittext" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
