@@ -24,6 +24,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation rootProject.ext.dependencies.androidJUnit
+    androidTestImplementation rootProject.ext.dependencies.androidXTestRunner
+    androidTestImplementation rootProject.ext.dependencies.androidXTextEspressoCore
+
     if (rootProject.ext.isModule) {
         implementation project(":modulemain")
     }

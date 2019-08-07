@@ -4,6 +4,7 @@
     <string name="draggable_grid">可拖动网格布局</string>
     <string name="draggable_list">可拖动垂直线性布局</string>
     <string name="smart_edittext">SmartEditText</string>
+    <string name="video_view">VideoView</string>
     <string name="password_hint">请输入数字或字母</string>
     <string name="password_regexp">[0-9a-zA-Z]*</string>
 </resources>

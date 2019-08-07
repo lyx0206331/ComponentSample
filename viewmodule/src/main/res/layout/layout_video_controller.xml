@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#80000000"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/cbSoundSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:padding="10dp"
+        android:drawableRight="@drawable/selector_sound_switch" />
+
+    <TextView
+        android:id="@+id/tvCurTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:layout_marginRight="10dp"
+        android:textSize="10sp"
+        android:textColor="#ffffff" />
+
+    <SeekBar
+        android:id="@+id/sbVideoProgress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:progressDrawable="@drawable/shape_video_seekbar"
+        android:indeterminateDrawable="@drawable/shape_video_seekbar"
+        android:thumb="@drawable/shape_video_seekbar_thumb"
+        tools:max="100"
+        tools:progress="30" />
+
+    <TextView
+        android:id="@+id/tvDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:29"
+        android:layout_marginLeft="10dp"
+        android:textSize="10sp"
+        android:textColor="#ffffff" />
+
+    <ImageButton
+        android:id="@+id/ibOrientation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_switch_orientation"
+        android:padding="10dp"
+        android:background="@android:color/transparent" />
+
+</LinearLayout>
