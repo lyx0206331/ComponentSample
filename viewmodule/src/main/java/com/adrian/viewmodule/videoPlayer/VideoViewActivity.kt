@@ -9,6 +9,8 @@ import kotlinx.android.synthetic.main.activity_video_view.*
 
 class VideoViewActivity : AppCompatActivity() {
 
+    private lateinit var controller: VideoViewController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_view)
@@ -20,7 +22,9 @@ class VideoViewActivity : AppCompatActivity() {
 //        videoView.setMediaController(controller)
 //        val controller = VideoViewController(this)
 //        videoView.controller = controller
-//
+
+        controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView).build()
+
         ibPlayOrPause.setOnClickListener {
             videoView.start()
             ibPlayOrPause.visibility = View.GONE
@@ -28,5 +32,10 @@ class VideoViewActivity : AppCompatActivity() {
 //        ibRotation.setOnClickListener {
 //            val isVerticle = if (it.tag == null) true else it.tag as Boolean
 //        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        controller.onDestroy()
     }
 }

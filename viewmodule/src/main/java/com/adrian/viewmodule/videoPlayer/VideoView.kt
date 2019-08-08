@@ -21,7 +21,8 @@ import java.io.IOException
  * description:
  */
 @SuppressLint("NewApi")
-class VideoView : TextureView, MediaPlayerControl {
+class VideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    TextureView(context, attrs, defStyle), MediaPlayerControl {
 
     companion object {
 
@@ -67,7 +68,7 @@ class VideoView : TextureView, MediaPlayerControl {
     var uri: Uri? = null
         private set
 
-    private var mContext: Context? = null
+//    private var mContext: Context? = null
 
     private val isInPlaybackState: Boolean
         get() = mMediaPlayer != null && mCurrentState != STATE_ERROR && mCurrentState != STATE_IDLE && mCurrentState != STATE_PREPARING
@@ -82,30 +83,22 @@ class VideoView : TextureView, MediaPlayerControl {
     private val mCompleteListener = OnCompletionListener { mp ->
         mCurrentState = STATE_PLAYBACK_COMPLETED
         mTargetState = STATE_PLAYBACK_COMPLETED
-        mSurface!!.release()
+        mSurface?.release()
 
-        if (mMediaController != null) {
-            mMediaController!!.hide()
-        }
+        mMediaController?.hide()
 
-        if (mOnCompletionListener != null) {
-            mOnCompletionListener!!.onCompletion(mp)
-        }
+        mOnCompletionListener?.onCompletion(mp)
 
-        if (mMediaControllListener != null) {
-            mMediaControllListener!!.onComplete()
-        }
+        mMediaControllListener?.onComplete()
     }
 
     private val mPreparedListener = MediaPlayer.OnPreparedListener { mp ->
         mCurrentState = STATE_PREPARED
 
-        if (mOnPreparedListener != null) {
-            mOnPreparedListener!!.onPrepared(mMediaPlayer)
-        }
-        if (mMediaController != null) {
-            mMediaController!!.isEnabled = true
-        }
+        mOnPreparedListener?.onPrepared(mMediaPlayer)
+
+        mMediaController?.isEnabled = true
+
 
         mVideoWidth = mp.videoWidth
         mVideoHeight = mp.videoHeight
@@ -121,17 +114,13 @@ class VideoView : TextureView, MediaPlayerControl {
         invalidate()
         if (mVideoWidth != 0 && mVideoHeight != 0) {
             if (mTargetState == STATE_PLAYING) {
-                mMediaPlayer!!.start()
-                if (null != mMediaControllListener) {
-                    mMediaControllListener!!.onStart()
-                }
+                mMediaPlayer?.start()
+                mMediaControllListener?.onStart()
             }
         } else {
             if (mTargetState == STATE_PLAYING) {
-                mMediaPlayer!!.start()
-                if (null != mMediaControllListener) {
-                    mMediaControllListener!!.onStart()
-                }
+                mMediaPlayer?.start()
+                mMediaControllListener?.onStart()
             }
         }
     }
@@ -149,15 +138,11 @@ class VideoView : TextureView, MediaPlayerControl {
         mCurrentState = STATE_ERROR
         mTargetState = STATE_ERROR
 
-        if (mMediaController != null) {
-            mMediaController!!.hide()
-        }
+        mMediaController?.hide()
 
         /* If an error handler has been supplied, use it and finish. */
-        if (mOnErrorListener != null) {
-            if (mOnErrorListener!!.onError(mMediaPlayer, what, extra)) {
-                return@OnErrorListener true
-            }
+        if (mOnErrorListener?.onError(mMediaPlayer, what, extra) == true) {
+            return@OnErrorListener true
         }
 
         /*
@@ -196,17 +181,14 @@ class VideoView : TextureView, MediaPlayerControl {
             override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
 
                 mSurface = null
-                if (mMediaController != null) {
-                    mMediaController!!.hide()
-                }
+                mMediaController?.hide()
+
                 release(true)
                 return true
             }
 
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-                if (playingListener != null) {
-                    playingListener!!.onPlaying()
-                }
+                playingListener?.onPlaying(currentPosition, duration)
             }
         }
 
@@ -214,22 +196,11 @@ class VideoView : TextureView, MediaPlayerControl {
 
     internal var playingListener: OnPlayingListener? = null
 
-    constructor(context: Context) : super(context) {
-        mContext = context
+    init {
         initVideoView()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        mContext = context
-        initVideoView()
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        mContext = context
-        initVideoView()
-    }
-
-    fun initVideoView() {
+    private fun initVideoView() {
         mVideoHeight = 0
         mVideoWidth = 0
         //        setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -278,8 +249,8 @@ class VideoView : TextureView, MediaPlayerControl {
         openVideo()
     }
 
-    override fun setSurfaceTexture(_surfaceTexture: SurfaceTexture) {
-        mSurfaceTexture = _surfaceTexture
+    override fun setSurfaceTexture(surfaceTexture: SurfaceTexture) {
+        mSurfaceTexture = surfaceTexture
     }
 
     fun openVideo() {
@@ -292,32 +263,32 @@ class VideoView : TextureView, MediaPlayerControl {
         // framework.
         val i = Intent("com.android.music.musicservicecommand")
         i.putExtra("command", "pause")
-        mContext!!.sendBroadcast(i)
+        context.sendBroadcast(i)
         release(false)
         try {
             mSurface = Surface(mSurfaceTexture)
             mMediaPlayer = MediaPlayer()
             if (mAudioSession != 0) {
-                mMediaPlayer!!.audioSessionId = mAudioSession
+                mMediaPlayer?.audioSessionId = mAudioSession
             } else {
-                mAudioSession = mMediaPlayer!!.audioSessionId
+                mAudioSession = mMediaPlayer?.audioSessionId ?: 0
             }
 
-            mMediaPlayer!!.setOnBufferingUpdateListener(mBufferingUpdateListener)
-            mMediaPlayer!!.setOnCompletionListener(mCompleteListener)
-            mMediaPlayer!!.setOnPreparedListener(mPreparedListener)
-            mMediaPlayer!!.setOnErrorListener(mErrorListener)
-            mMediaPlayer!!.setOnInfoListener(mOnInfoListener)
-            mMediaPlayer!!.setOnVideoSizeChangedListener(mVideoSizeChangedListener)
+            mMediaPlayer?.setOnBufferingUpdateListener(mBufferingUpdateListener)
+            mMediaPlayer?.setOnCompletionListener(mCompleteListener)
+            mMediaPlayer?.setOnPreparedListener(mPreparedListener)
+            mMediaPlayer?.setOnErrorListener(mErrorListener)
+            mMediaPlayer?.setOnInfoListener(mOnInfoListener)
+            mMediaPlayer?.setOnVideoSizeChangedListener(mVideoSizeChangedListener)
 
-            mMediaPlayer!!.setSurface(mSurface)
+            mMediaPlayer?.setSurface(mSurface)
             mCurrentBufferPercentage = 0
-            mMediaPlayer!!.setDataSource(mContext!!, uri!!)
+            mMediaPlayer?.setDataSource(context, uri!!)
 
-            mMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            mMediaPlayer!!.setScreenOnWhilePlaying(true)
+            mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mMediaPlayer?.setScreenOnWhilePlaying(true)
 
-            mMediaPlayer!!.prepareAsync()
+            mMediaPlayer?.prepareAsync()
             mCurrentState = STATE_PREPARING
         } catch (e: IllegalStateException) {
             mCurrentState = STATE_ERROR
@@ -333,37 +304,33 @@ class VideoView : TextureView, MediaPlayerControl {
 
     fun stopPlayback() {
         if (mMediaPlayer != null) {
-            mMediaPlayer!!.stop()
-            mMediaPlayer!!.release()
+            mMediaPlayer?.stop()
+            mMediaPlayer?.release()
             mMediaPlayer = null
-            if (null != mMediaControllListener) {
-                mMediaControllListener!!.onStop()
-            }
+            mMediaControllListener?.onStop()
         }
     }
 
     fun setMediaController(controller: MediaController) {
-        if (mMediaController != null) {
-            mMediaController!!.hide()
-        }
+        mMediaController?.hide()
         mMediaController = controller
         attachMediaController()
     }
 
     private fun attachMediaController() {
-        if (mMediaPlayer != null && mMediaController != null) {
-            mMediaController!!.setMediaPlayer(this)
+        mMediaPlayer?.let {
+            mMediaController?.setMediaPlayer(this)
             val anchorView = if (this.parent is View) this.parent as View else this
-            mMediaController!!.setAnchorView(anchorView)
-            mMediaController!!.isEnabled = isInPlaybackState
+            mMediaController?.setAnchorView(anchorView)
+            mMediaController?.isEnabled = isInPlaybackState
         }
     }
 
     private fun release(cleartargetstate: Boolean) {
         Log.d(TAG, "Releasing media player.")
         if (mMediaPlayer != null) {
-            mMediaPlayer!!.reset()
-            mMediaPlayer!!.release()
+            mMediaPlayer?.reset()
+            mMediaPlayer?.release()
             mMediaPlayer = null
             mCurrentState = STATE_IDLE
             if (cleartargetstate) {
@@ -415,24 +382,24 @@ class VideoView : TextureView, MediaPlayerControl {
                     && keyCode != KeyEvent.KEYCODE_ENDCALL)
         if (isInPlaybackState && isKeyCodeSupported && mMediaController != null) {
             if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
-                if (mMediaPlayer!!.isPlaying) {
+                if (mMediaPlayer?.isPlaying == true) {
                     pause()
-                    mMediaController!!.show()
+                    mMediaController?.show()
                 } else {
                     start()
-                    mMediaController!!.hide()
+                    mMediaController?.hide()
                 }
                 return true
             } else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
-                if (!mMediaPlayer!!.isPlaying) {
+                if (mMediaPlayer?.isPlaying != true) {
                     start()
-                    mMediaController!!.hide()
+                    mMediaController?.hide()
                 }
                 return true
             } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {
-                if (mMediaPlayer!!.isPlaying) {
+                if (mMediaPlayer?.isPlaying == true) {
                     pause()
-                    mMediaController!!.show()
+                    mMediaController?.show()
                 }
                 return true
             } else {
@@ -444,10 +411,10 @@ class VideoView : TextureView, MediaPlayerControl {
     }
 
     private fun toggleMediaControlsVisiblity() {
-        if (mMediaController!!.isShowing) {
-            mMediaController!!.hide()
+        if (mMediaController?.isShowing == true) {
+            mMediaController?.hide()
         } else {
-            mMediaController!!.show()
+            mMediaController?.show()
         }
     }
 
@@ -458,11 +425,9 @@ class VideoView : TextureView, MediaPlayerControl {
         // 2. When the surface becomes available
         // 3. From the activity
         if (isInPlaybackState) {
-            mMediaPlayer!!.start()
+            mMediaPlayer?.start()
             mCurrentState = STATE_PLAYING
-            if (null != mMediaControllListener) {
-                mMediaControllListener!!.onStart()
-            }
+            mMediaControllListener?.onStart()
         } else {
             Log.d(TAG, "Could not start. Current state $mCurrentState")
         }
@@ -471,12 +436,10 @@ class VideoView : TextureView, MediaPlayerControl {
 
     override fun pause() {
         if (isInPlaybackState) {
-            if (mMediaPlayer!!.isPlaying) {
-                mMediaPlayer!!.pause()
+            if (mMediaPlayer?.isPlaying == true) {
+                mMediaPlayer?.pause()
                 mCurrentState = STATE_PAUSED
-                if (null != mMediaControllListener) {
-                    mMediaControllListener!!.onPause()
-                }
+                mMediaControllListener?.onPause()
             }
         }
         mTargetState = STATE_PAUSED
@@ -492,27 +455,27 @@ class VideoView : TextureView, MediaPlayerControl {
 
     override fun getDuration(): Int {
         return if (isInPlaybackState) {
-            mMediaPlayer!!.duration
+            mMediaPlayer?.duration ?: 0
         } else -1
     }
 
     override fun getCurrentPosition(): Int {
         return if (isInPlaybackState) {
-            mMediaPlayer!!.currentPosition
+            mMediaPlayer?.currentPosition ?: 0
         } else 0
     }
 
     override fun seekTo(msec: Int) {
-        if (isInPlaybackState) {
+        mSeekWhenPrepared = if (isInPlaybackState) {
             mMediaPlayer!!.seekTo(msec)
-            mSeekWhenPrepared = 0
+            0
         } else {
-            mSeekWhenPrepared = msec
+            msec
         }
     }
 
     override fun isPlaying(): Boolean {
-        return isInPlaybackState && mMediaPlayer!!.isPlaying
+        return isInPlaybackState && (mMediaPlayer?.isPlaying == true)
     }
 
     override fun getBufferPercentage(): Int {
@@ -607,6 +570,6 @@ class VideoView : TextureView, MediaPlayerControl {
     }
 
     interface OnPlayingListener {
-        fun onPlaying()
+        fun onPlaying(position: Int, duration: Int)
     }
 }

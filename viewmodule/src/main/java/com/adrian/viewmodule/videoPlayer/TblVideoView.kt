@@ -2,13 +2,9 @@ package com.adrian.viewmodule.videoPlayer
 
 import android.app.Activity
 import android.content.Context
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.database.ContentObserver
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.os.Handler
-import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,57 +16,19 @@ import com.adrian.viewmodule.R
  * author:RanQing
  * description:
  */
-class TblVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    RelativeLayout(context, attrs, defStyleAttr) {
-
-    var videoView: VideoView
-
-    var controller: VideoViewController
-
-    init {
-        videoView = VideoView(context)
-        val vvLp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        vvLp.addRule(CENTER_IN_PARENT)
-        videoView.layoutParams = vvLp
-        addView(videoView)
-
-        controller = VideoViewController(context as Activity)
-        val ctrlLp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        ctrlLp.addRule(ALIGN_PARENT_BOTTOM)
-        controller.layoutParams = ctrlLp
-        addView(controller)
-
-        controller.videoView = videoView
-    }
-
-    fun setVideoPath(path: String) {
-        videoView.setVideoPath(path)
-        videoView.start()
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-//        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-//            val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-//        }
-    }
-}
 
 class VideoViewController @JvmOverloads constructor(
-    val context: Activity,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+    val context: Activity
+) {
 
     companion object {
         const val MAX = 100
     }
 
-    var controller: View
+    /** 控制器 */
+    private var controller: View = LayoutInflater.from(context).inflate(R.layout.layout_video_controller, null, false)
+    /** 父容器 */
+    private var parentContainer: RelativeLayout? = null
 
     /** 声音开关 */
     private var cbSoundSwitch: CheckBox
@@ -83,17 +41,9 @@ class VideoViewController @JvmOverloads constructor(
     /** 横竖屏切换 */
     private var ibOrientation: ImageButton
 
-    var videoView: VideoView? = null
-        set(value) {
-            field = value
-            totalDuration = value?.duration ?: 0
-            value?.setOnInfoListener(object : MediaPlayer.OnInfoListener {
-                override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-                    Log.e("PLAYER", "what:$what, extra:$extra")
-                    return false
-                }
-            })
-        }
+    private var videoView: VideoView? = null
+
+    private var contentView: View? = null
 
     /** 声音是否关闭,默认未关闭 */
     private var isSoundClose = false
@@ -113,7 +63,7 @@ class VideoViewController @JvmOverloads constructor(
         }
 
     /** 是否简单模式,简单模式下音量开关、时间、进度条指示器及横竖屏切换键隐藏 */
-    var isSimleMode = false
+    var isSimpleMode = false
         set(value) {
             field = value
             if (value) {
@@ -140,7 +90,6 @@ class VideoViewController @JvmOverloads constructor(
     private var initVolume: Int
 
     init {
-        controller = LayoutInflater.from(context).inflate(R.layout.layout_video_controller, this, true)
 
         cbSoundSwitch = controller.findViewById(R.id.cbSoundSwitch)
         tvCurTime = controller.findViewById(R.id.tvCurTime)
@@ -153,34 +102,10 @@ class VideoViewController @JvmOverloads constructor(
 
         initVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC)
 
-        cbSoundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            isSoundClose = isChecked
-//            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            am.setStreamVolume(
-                AudioManager.STREAM_MUSIC,
-                if (isChecked) AudioManager.ADJUST_MUTE else initVolume,
-                AudioManager.FLAG_PLAY_SOUND
-            )
-        }
-        ibOrientation.setOnClickListener {
-            isVertical = !isVertical
-            context.requestedOrientation =
-                if (isVertical) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }
-        sbVideoProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val playProgress = videoView?.duration ?: 0 * progress / MAX
-                curPlayTime = playProgress
-                videoView?.seekTo(playProgress)
-            }
+        isSoundClose = initVolume == 0
+        cbSoundSwitch.isChecked = isSoundClose
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
+        //注册音量调节监听
         context.contentResolver.registerContentObserver(
             android.provider.Settings.System.CONTENT_URI,
             true,
@@ -188,28 +113,108 @@ class VideoViewController @JvmOverloads constructor(
         )
     }
 
+    private fun initListener() {
+        cbSoundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            isSoundClose = isChecked
+            //            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            am.setStreamVolume(
+                AudioManager.STREAM_MUSIC,
+                if (isChecked) /*AudioManager.ADJUST_MUTE*/ 0 else initVolume,
+                /*AudioManager.FLAG_PLAY_SOUND*/0
+            )
+        }
+
+        ibOrientation.setOnClickListener {
+            //            isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+//            context.requestedOrientation =
+//                if (isVertical) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+        sbVideoProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            var isTouch = false
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (isTouch) {
+                    val playPosition = videoView?.duration ?: 0 * progress / MAX
+                    curPlayTime = playPosition
+                    videoView?.seekTo(playPosition)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isTouch = true
+                videoView?.pause()
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                isTouch = false
+                videoView?.start()
+            }
+        })
+
+        videoView?.setOnPlayingListener(object : VideoView.OnPlayingListener {
+            override fun onPlaying(position: Int, duration: Int) {
+                Log.e("VIDEOVIEW", "position:$position duration:$duration")
+                curPlayTime = position
+                totalDuration = duration
+                sbVideoProgress.progress = position * MAX / duration
+            }
+        })
+
+    }
+
+    fun build(): VideoViewController {
+        initListener()
+
+        val controllerLp = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        controllerLp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        controller.layoutParams = controllerLp
+        parentContainer?.addView(controller)
+        return this
+    }
+
+    fun setVideoView(videoView: VideoView): VideoViewController {
+        this.videoView = videoView
+        return this
+    }
+
+    fun setParentContainer(container: RelativeLayout): VideoViewController {
+        this.parentContainer = container
+        return this
+    }
+
+    fun setContentView(contentView: View): VideoViewController {
+        this.contentView = contentView
+        return this
+    }
+
     /**
      * 格式化时间
      */
     private fun formatTime(time: Int): String {
+        val total = time / 1000
         return when {
-            time <= 0 -> "00:00"
-            time < 3600 -> {
-                val second = time % 60
-                val minute = time / 60
+            total <= 0 -> "00:00"
+            total < 3600 -> {
+                val second = total % 60
+                val minute = total / 60
                 String.format("%02d:%02d", minute, second)
             }
             else -> {
-                val second = time % 60
-                val minute = time % 3600 / 60
-                val hour = time / 3600
+                val second = total % 60
+                val minute = total % 3600 / 60
+                val hour = total / 3600
                 String.format("%02d:%02d:%02d", hour, minute, second)
             }
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
+    fun onDestroy() {
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, initVolume, 0)
         context.contentResolver.unregisterContentObserver(volumeObserver)
     }
 
@@ -218,7 +223,9 @@ class VideoViewController @JvmOverloads constructor(
             super.onChange(selfChange)
             val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val curVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC)
-            Log.e("VOLUME", "volume=$curVolume")
+            initVolume = if (curVolume > 0) curVolume else initVolume
+//            Log.e("VOLUME", "curVolume=$curVolume initvolume=$initVolume")
+            cbSoundSwitch.isChecked = curVolume == 0
         }
     }
 }
