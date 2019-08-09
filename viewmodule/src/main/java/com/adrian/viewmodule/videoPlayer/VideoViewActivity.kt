@@ -23,7 +23,7 @@ class VideoViewActivity : AppCompatActivity() {
 //        val controller = VideoViewController(this)
 //        videoView.controller = controller
 
-        controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView).build()
+        controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView).setContentView(llConentView).build()
 
         ibPlayOrPause.setOnClickListener {
             videoView.start()
