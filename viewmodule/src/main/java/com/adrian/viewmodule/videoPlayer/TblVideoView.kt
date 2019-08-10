@@ -2,6 +2,8 @@ package com.adrian.viewmodule.videoPlayer
 
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.database.ContentObserver
 import android.media.AudioManager
 import android.os.Handler
@@ -48,7 +50,13 @@ class VideoViewController @JvmOverloads constructor(
     /** 声音是否关闭,默认未关闭 */
     private var isSoundClose = false
     /** 是否竖屏,默认竖屏 */
-    private var isVertical = true
+    var isVertical = true
+        set(value) {
+            field = value
+            context.requestedOrientation =
+                if (field) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        get() = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     /** 当前播放时长 */
     private var curPlayTime = 0
         set(value) {
@@ -73,6 +81,7 @@ class VideoViewController @JvmOverloads constructor(
                 ibOrientation.visibility = View.GONE
                 sbVideoProgress.thumb = null
                 sbVideoProgress.isFocusableInTouchMode = false
+                contentView?.visibility = View.GONE
             } else {
                 cbSoundSwitch.visibility = View.VISIBLE
                 tvCurTime.visibility = View.VISIBLE
@@ -80,6 +89,7 @@ class VideoViewController @JvmOverloads constructor(
                 ibOrientation.visibility = View.VISIBLE
                 sbVideoProgress.thumb = context.resources.getDrawable(R.drawable.shape_video_seekbar_thumb)
                 sbVideoProgress.isFocusableInTouchMode = true
+                contentView?.visibility = View.VISIBLE
             }
         }
 
@@ -125,7 +135,8 @@ class VideoViewController @JvmOverloads constructor(
         }
 
         ibOrientation.setOnClickListener {
-            //            isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            isVertical = !isVertical
+//                        isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 //            context.requestedOrientation =
 //                if (isVertical) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }

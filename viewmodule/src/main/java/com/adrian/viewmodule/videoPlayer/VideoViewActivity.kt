@@ -29,6 +29,14 @@ class VideoViewActivity : AppCompatActivity() {
             videoView.start()
             ibPlayOrPause.visibility = View.GONE
         }
+
+        ibBack.setOnClickListener {
+            if (!controller.isVertical) {
+                controller.isVertical = !controller.isVertical
+            } else {
+                finish()
+            }
+        }
 //        ibRotation.setOnClickListener {
 //            val isVerticle = if (it.tag == null) true else it.tag as Boolean
 //        }
