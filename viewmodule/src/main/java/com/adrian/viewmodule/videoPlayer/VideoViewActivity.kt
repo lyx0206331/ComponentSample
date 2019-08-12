@@ -1,11 +1,12 @@
 package com.adrian.viewmodule.videoPlayer
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.adrian.viewmodule.R
-import kotlinx.android.synthetic.main.activity_video_view.*
+import kotlinx.android.synthetic.main.item_player_layout.*
 
 class VideoViewActivity : AppCompatActivity() {
 
@@ -23,7 +24,14 @@ class VideoViewActivity : AppCompatActivity() {
 //        val controller = VideoViewController(this)
 //        videoView.controller = controller
 
-        controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView).setContentView(llConentView).build()
+        controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView)
+            .setContentView(llConentView).setTitleView(ibBack, View.OnClickListener {
+                if (!controller.isVertical) {
+                    controller.isVertical = true
+                } else {
+                    finish()
+                }
+            }).build()
 
         ibPlayOrPause.setOnClickListener {
             videoView.start()
@@ -40,6 +48,11 @@ class VideoViewActivity : AppCompatActivity() {
 //        ibRotation.setOnClickListener {
 //            val isVerticle = if (it.tag == null) true else it.tag as Boolean
 //        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        controller.changeViewWithOrientation()
     }
 
     override fun onDestroy() {

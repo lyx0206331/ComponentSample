@@ -29,11 +29,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
+        android:maxHeight="2dp"
+        android:minHeight="2dp"
         android:progressDrawable="@drawable/shape_video_seekbar"
         android:indeterminateDrawable="@drawable/shape_video_seekbar"
         android:thumb="@drawable/shape_video_seekbar_thumb"
+        android:thumbOffset="0dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         tools:max="100"
         tools:progress="30" />
 
