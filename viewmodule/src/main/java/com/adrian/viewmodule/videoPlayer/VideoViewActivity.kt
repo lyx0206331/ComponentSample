@@ -3,6 +3,7 @@ package com.adrian.viewmodule.videoPlayer
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.adrian.viewmodule.R
@@ -27,32 +28,25 @@ class VideoViewActivity : AppCompatActivity() {
         controller = VideoViewController(this).setParentContainer(videoParentContainer).setVideoView(videoView)
             .setContentView(llConentView).setTitleView(ibBack, View.OnClickListener {
                 if (!controller.isVertical) {
-                    controller.isVertical = true
+                    controller.changeOrientation()
                 } else {
                     finish()
                 }
             }).build()
 
+        controller.onOrientationChangeListener = {
+            Log.e("ORIENTATION", "isVertical: $it")
+        }
+
         ibPlayOrPause.setOnClickListener {
             videoView.start()
             ibPlayOrPause.visibility = View.GONE
         }
-
-        ibBack.setOnClickListener {
-            if (!controller.isVertical) {
-                controller.isVertical = !controller.isVertical
-            } else {
-                finish()
-            }
-        }
-//        ibRotation.setOnClickListener {
-//            val isVerticle = if (it.tag == null) true else it.tag as Boolean
-//        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        controller.changeViewWithOrientation()
+        controller.orientationChanged()
     }
 
     override fun onDestroy() {

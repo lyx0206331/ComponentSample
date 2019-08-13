@@ -577,7 +577,7 @@ class TblVideoView @JvmOverloads constructor(context: Context, attrs: AttributeS
 }
 
 class VideoViewController @JvmOverloads constructor(
-    val context: Activity
+    val context: Context
 ) {
 
     companion object {
@@ -607,15 +607,18 @@ class VideoViewController @JvmOverloads constructor(
     private var contentView: View? = null
     /** 是否自动重播 */
     var isAutoReplay = false
+    /** 方向改变监听 */
+    var onOrientationChangeListener: ((isVertical: Boolean) -> Unit)? = null
 
     /** 声音是否关闭,默认未关闭 */
     private var isSoundClose = false
-    /** 是否竖屏,默认竖屏 */
+    /** 是否竖屏,默认竖屏.必须Manifest中配置configChanges="orientation|screenSize|keyboardHidden"才生效 */
     var isVertical = true
         set(value) {
             field = value
-            context.requestedOrientation =
-                if (field) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            isSimpleMode = !field
+            contentView?.visibility = if (isVertical) View.VISIBLE else View.GONE
+            onOrientationChangeListener?.invoke(field)
         }
         get() = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     /** 当前播放时长 */
@@ -632,7 +635,7 @@ class VideoViewController @JvmOverloads constructor(
         }
 
     /** 是否简单模式,简单模式下音量开关、时间、进度条指示器及横竖屏切换键隐藏 */
-    var isSimpleMode = false
+    private var isSimpleMode = false
         set(value) {
             field = value
             if (value) {
@@ -658,10 +661,12 @@ class VideoViewController @JvmOverloads constructor(
             }
         }
 
+    /** 设置音量观察者 */
     private val volumeObserver = SettingsContentObserver(Handler())
 
     private val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
+    /** 初始音量,会随音量键变化 */
     private var initVolume: Int
 
     init {
@@ -691,19 +696,14 @@ class VideoViewController @JvmOverloads constructor(
     private fun initListener() {
         cbSoundSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             isSoundClose = isChecked
-            //            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             am.setStreamVolume(
                 AudioManager.STREAM_MUSIC,
-                if (isChecked) /*AudioManager.ADJUST_MUTE*/ 0 else initVolume,
-                /*AudioManager.FLAG_PLAY_SOUND*/0
+                if (isChecked) 0 else initVolume, 0
             )
         }
 
         ibOrientation.setOnClickListener {
-            isVertical = !isVertical
-//                        isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-//            context.requestedOrientation =
-//                if (isVertical) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            changeOrientation()
         }
 
         sbVideoProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -731,7 +731,7 @@ class VideoViewController @JvmOverloads constructor(
 
         videoView?.setOnPlayingListener(object : TblVideoView.OnPlayingListener {
             override fun onPlaying(position: Int, duration: Int) {
-                Log.e("VIDEOVIEW", "position:$position duration:$duration")
+//                Log.e("VIDEOVIEW", "position:$position duration:$duration")
                 curPlayTime = position
                 totalDuration = duration
                 sbVideoProgress.progress = position * MAX / duration
@@ -744,6 +744,14 @@ class VideoViewController @JvmOverloads constructor(
             }
         })
 
+    }
+
+    /**
+     * 改变方向
+     */
+    fun changeOrientation() {
+        (context as Activity).requestedOrientation =
+            if (isVertical) ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     fun build(): VideoViewController {
@@ -794,9 +802,11 @@ class VideoViewController @JvmOverloads constructor(
         return this
     }
 
-    fun changeViewWithOrientation() {
-        contentView?.visibility = if (isVertical) View.VISIBLE else View.GONE
-        isSimpleMode = !isVertical
+    /**
+     * 方向已改变,在 {@link Activity#onConfigurationChanged(Configuration)}中声明
+     */
+    fun orientationChanged() {
+        isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
 
     /**
