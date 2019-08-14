@@ -11,6 +11,14 @@
         android:layout_centerInParent="true" />
 
     <ImageButton
+        android:id="@+id/ibPlayOrPause"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_puase"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
         android:id="@+id/ibBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,12 +26,17 @@
         android:src="@drawable/ic_back_white_24dp"
         android:background="@android:color/transparent" />
 
-    <ImageButton
-        android:id="@+id/ibPlayOrPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@mipmap/ic_video_pause" />
+    <FrameLayout
+        android:id="@+id/flLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/llConentView"

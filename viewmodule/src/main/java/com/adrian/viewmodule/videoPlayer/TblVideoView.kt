@@ -603,8 +603,12 @@ class VideoViewController @JvmOverloads constructor(
     private var titleView: View? = null
     /** 播放器 */
     private var videoView: TblVideoView? = null
+    /** 播放暂停按钮 */
+    private var ibPlayOrPause: ImageButton? = null
     /** 额外内容 */
     private var contentView: View? = null
+    /** 加载缓冲进度条 */
+    private var loadingView: FrameLayout? = null
     /** 是否自动重播 */
     var isAutoReplay = false
     /** 方向改变监听 */
@@ -645,6 +649,8 @@ class VideoViewController @JvmOverloads constructor(
                 ibOrientation.visibility = View.GONE
                 sbVideoProgress.thumb = null
                 sbVideoProgress.isFocusableInTouchMode = false
+                sbVideoProgress.visibility = View.VISIBLE
+                sbVideoProgress.isEnabled = true
                 contentView?.visibility = View.GONE
                 val lp = controller.layoutParams as RelativeLayout.LayoutParams
                 lp.setMargins(0, 0, 0, 0)
@@ -712,7 +718,7 @@ class VideoViewController @JvmOverloads constructor(
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (isTouch) {
-                    val playPosition = videoView?.duration ?: 0 * progress / MAX
+                    val playPosition = (videoView?.duration ?: 0) * progress / MAX
                     curPlayTime = playPosition
                     videoView?.seekTo(playPosition)
                 }
@@ -741,9 +747,69 @@ class VideoViewController @JvmOverloads constructor(
         videoView?.setOnCompletionListener(MediaPlayer.OnCompletionListener {
             if (isAutoReplay) {
                 it.start()
+                it.isLooping = true
             }
         })
 
+        videoView?.setOnInfoListener(MediaPlayer.OnInfoListener { mp, what, extra ->
+            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                loadingView?.visibility = View.VISIBLE
+            } else {
+                loadingView?.visibility = View.GONE
+            }
+            true
+        })
+
+        videoView?.setMediaControllListener(object : TblVideoView.MediaControllListener {
+            override fun onStart() {
+                ibPlayOrPause?.setImageResource(R.mipmap.ic_puase)
+                changePlayPauseState(true)
+            }
+
+            override fun onPause() {
+                ibPlayOrPause?.setImageResource(R.mipmap.ic_play)
+                changePlayPauseState(false)
+            }
+
+            override fun onStop() {
+            }
+
+            override fun onComplete() {
+            }
+        })
+
+        ibPlayOrPause?.setOnClickListener {
+            if (controller.visibility == View.VISIBLE) {
+                if (videoView?.isPlaying == true) {
+                    videoView?.pause()
+                } else {
+                    videoView?.start()
+                }
+            } else {
+                ibPlayOrPause?.alpha = 1f
+                controller.visibility = View.VISIBLE
+                sbVideoProgress.isEnabled = true
+            }
+        }
+
+    }
+
+    private fun changePlayPauseState(isPlaying: Boolean) {
+        if (!isPlaying) {
+//            ibPlayOrPause?.setImageResource(R.mipmap.ic_play)
+            ibPlayOrPause?.alpha = 1f
+            if (isVertical) {
+                controller.visibility = View.VISIBLE
+                sbVideoProgress.isEnabled = false
+            }
+        } else {
+//            ibPlayOrPause?.setImageResource(R.mipmap.ic_puase)
+            ibPlayOrPause?.alpha = 0f
+            if (isVertical) {
+                controller.visibility = View.GONE
+                sbVideoProgress.isEnabled = true
+            }
+        }
     }
 
     /**
@@ -785,6 +851,12 @@ class VideoViewController @JvmOverloads constructor(
         return this
     }
 
+    /** 设置播放状态按钮 */
+    fun setPlayStateButton(ibPlayOrPause: ImageButton): VideoViewController {
+        this.ibPlayOrPause = ibPlayOrPause
+        return this
+    }
+
     /**
      * 设置标题栏
      */
@@ -803,7 +875,15 @@ class VideoViewController @JvmOverloads constructor(
     }
 
     /**
-     * 方向已改变,在 {@link Activity#onConfigurationChanged(Configuration)}中声明
+     * 加载缓冲进度条
+     */
+    fun setLoadingView(loadingView: FrameLayout): VideoViewController {
+        this.loadingView = loadingView
+        return this
+    }
+
+    /**
+     * 方向已改变,在[android.app.Activity.onConfigurationChanged]中声明
      */
     fun orientationChanged() {
         isVertical = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
