@@ -3,6 +3,7 @@ package com.adrian.viewmodule
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.adrian.viewmodule.draggableview.DragGridActivity
 import com.adrian.viewmodule.draggableview.DragListActivity
@@ -20,6 +21,16 @@ class MainActivity : AppCompatActivity() {
         btnDragList.setOnClickListener { launchActivity(DragListActivity::class.java) }
         btnSmartEditText.setOnClickListener { launchActivity(SmartEditTextActivity::class.java) }
         btnVideoView.setOnClickListener { launchActivity(VideoViewActivity::class.java) }
+
+        etv.setExpandListener(object : ExpandableTextView.OnExpandListener{
+            override fun onExpand(view: ExpandableTextView?) {
+                Log.e("TEST_ETV", "onExpand")
+            }
+
+            override fun onShrink(view: ExpandableTextView?) {
+                Log.e("TEST_ETV", "onShrink")
+            }
+        })
     }
 
     private fun <T : Activity> launchActivity(desClz: Class<T>) {
