@@ -654,6 +654,7 @@ class VideoViewController @JvmOverloads constructor(
                 contentView?.visibility = View.GONE
                 val lp = controller.layoutParams as RelativeLayout.LayoutParams
                 lp.setMargins(0, 0, 0, 0)
+                sbVideoProgress.setPadding(0, 0, 0, 0)
             } else {
                 cbSoundSwitch.visibility = View.VISIBLE
                 tvCurTime.visibility = View.VISIBLE
@@ -664,6 +665,7 @@ class VideoViewController @JvmOverloads constructor(
                 contentView?.visibility = View.VISIBLE
                 val lp = controller.layoutParams as RelativeLayout.LayoutParams
                 lp.setMargins(0, 0, 0, 450)
+                sbVideoProgress.setPadding(20, 0, 20, 0)
             }
         }
 

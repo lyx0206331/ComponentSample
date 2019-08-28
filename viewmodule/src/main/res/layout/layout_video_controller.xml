@@ -35,10 +35,6 @@
         android:indeterminateDrawable="@drawable/shape_video_seekbar"
         android:thumb="@drawable/shape_video_seekbar_thumb"
         android:thumbOffset="0dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
         tools:max="100"
         tools:progress="30" />
 
