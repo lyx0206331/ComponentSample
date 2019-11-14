@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.adrian.viewmodule.draggableview.DragGridActivity
 import com.adrian.viewmodule.draggableview.DragListActivity
 import com.adrian.viewmodule.smartedittext.SmartEditTextActivity
 import com.adrian.viewmodule.videoPlayer.VideoViewActivity
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +35,44 @@ class MainActivity : AppCompatActivity() {
                 Log.e("TEST_ETV", "onShrink")
             }
         })
+
+        val tabs = arrayListOf("标题一", "标题二", "标题三", "标题四", "标题五")
+        initTabTitle(tabs)
+    }
+
+    private fun initTabTitle(tabs: ArrayList<String>) {
+        var holer: TabViewHoler?
+        tabs.forEachIndexed { index, s ->
+            val tab = tabTitle.newTab()
+            tab?.setCustomView(R.layout.item_outing_topic)
+            holer = TabViewHoler(tab?.customView)
+            holer?.tvTitle?.text = s
+            if (index == 0) {
+                holer?.tvTitle?.isSelected = true
+                holer?.tvTitle?.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)
+            }
+            tabTitle.addTab(tab)
+        }
+        tabTitle.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+                holer = TabViewHoler(p0?.customView)
+                holer?.tvTitle?.isSelected = false
+                holer?.tvTitle?.setTextSize(TypedValue.COMPLEX_UNIT_PX, 30f)
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                holer = TabViewHoler(p0?.customView)
+                holer?.tvTitle?.isSelected = true
+                holer?.tvTitle?.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)
+            }
+        })
+    }
+
+    inner class TabViewHoler(parent: View?) {
+        val tvTitle = parent?.findViewById<TextView>(R.id.tvTopicName)
     }
 
     private fun <T : Activity> launchActivity(desClz: Class<T>) {

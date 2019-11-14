@@ -52,6 +52,16 @@
             app:etv_ToShrinkHintShow="false"
             app:etv_InitState="shrink"
             app:etv_EnableExpandSelf="false"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@android:color/holo_green_light"
+            app:tabIndicatorHeight="2dp"
+            app:tabMaxWidth="200dp"
+            app:tabMinWidth="100dp"
+            app:tabMode="scrollable" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
