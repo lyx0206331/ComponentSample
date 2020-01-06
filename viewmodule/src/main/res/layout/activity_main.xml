@@ -48,10 +48,10 @@
             app:etv_MaxLinesOnShrink="2"
             app:etv_ToExpandHint="展开"
             app:etv_ToExpandHintColor="#13C60E"
-            app:etv_EnableToggle="false"
-            app:etv_ToShrinkHintShow="false"
+            app:etv_EnableToggle="true"
+            app:etv_ToShrinkHintShow="true"
             app:etv_InitState="shrink"
-            app:etv_EnableExpandSelf="false"/>
+            app:etv_EnableExpandSelf="true" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabTitle"

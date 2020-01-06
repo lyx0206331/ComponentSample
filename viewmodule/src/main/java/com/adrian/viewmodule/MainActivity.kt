@@ -3,7 +3,6 @@ package com.adrian.viewmodule
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -26,15 +25,15 @@ class MainActivity : AppCompatActivity() {
         btnSmartEditText.setOnClickListener { launchActivity(SmartEditTextActivity::class.java) }
         btnVideoView.setOnClickListener { launchActivity(VideoViewActivity::class.java) }
 
-        etv.setExpandListener(object : ExpandableTextView.OnExpandListener{
-            override fun onExpand(view: ExpandableTextView?) {
-                Log.e("TEST_ETV", "onExpand")
-            }
-
-            override fun onShrink(view: ExpandableTextView?) {
-                Log.e("TEST_ETV", "onShrink")
-            }
-        })
+//        etv.setExpandListener(object : ExpandableTextView.OnExpandListener{
+//            override fun onExpand(view: ExpandableTextView?) {
+//                Log.e("TEST_ETV", "onExpand")
+//            }
+//
+//            override fun onShrink(view: ExpandableTextView?) {
+//                Log.e("TEST_ETV", "onShrink")
+//            }
+//        })
 
         val tabs = arrayListOf("标题一", "标题二", "标题三", "标题四", "标题五")
         initTabTitle(tabs)
