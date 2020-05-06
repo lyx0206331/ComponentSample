@@ -25,7 +25,8 @@ class VideoViewActivity : AppCompatActivity() {
         videoView.setVideoPath(videoPath)
 //        videoView.setVideoURI(Uri.fromFile(File(videoPath)))
 //        val controller = MediaController(this)
-//        videoView.setMediaController(controller)
+//        videoView.setMediaController
+
 //        val controller = VideoViewController(this)
 //        videoView.controller = controller
 
@@ -47,7 +48,7 @@ class VideoViewActivity : AppCompatActivity() {
 //        }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         controller.orientationChanged()
     }
